@@ -7,7 +7,7 @@
 - [Requisitos](#requisitos)
     - [Tecnologías utilizadas](#tecnologías-utilizadas)
     - [Infraestructura](#infraestructura)
-- [¿ Qué es AWX ?](#¿-qué-es-awx-)
+- [¿ Qué es AWX ?](#-qué-es-awx-)
 
 ## Introducción
 
