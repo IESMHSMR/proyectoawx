@@ -1,0 +1,9 @@
+# playbooks/delete_servers.yml
+---
+- hosts: local
+  gather_facts: False
+  roles:
+    - infra
+  vars:
+    # vars "action" reserved name
+    accion: "delete"
