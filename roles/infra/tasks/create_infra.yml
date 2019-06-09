@@ -1,0 +1,8 @@
+# roles/infra/tasks/create_infra.yml
+---
+
+- name: Include - Create instances
+  include_tasks: create_instance.yml
+
+- name: Include - Create inventory infra
+  include_tasks: create_inventory-infra.yml

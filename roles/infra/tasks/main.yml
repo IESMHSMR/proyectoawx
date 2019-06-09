@@ -1,0 +1,10 @@
+# roles/infra/tasks/main.yml
+---
+- name: Include - Create infra
+  include_tasks: create_infra.yml
+  when: accion == "create"
+
+- name: Include - Delete infra
+  include_tasks: delete_infra.yml
+  when: accion == "delete"
+

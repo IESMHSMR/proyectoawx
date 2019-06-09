@@ -1,0 +1,11 @@
+# roles/infra/tasks/delete_infra.yml
+---
+
+- name: Include - Delete floating ips
+  include_tasks: delete_floating-ips.yml
+
+- name: Include - Delete instances
+  include_tasks: delete_instance.yml
+
+- name: Include - Delete inventory infra
+  include_tasks: delete_inventory-infra.yml

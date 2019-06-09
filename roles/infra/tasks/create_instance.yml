@@ -1,0 +1,25 @@
+# roles/infra/tasks/create_instance.yml
+---
+
+- name: Create instances
+  os_server:
+    state: present
+    #validate_certs: no
+    ca_cert: "{{ role_path }}/files/gonzalonazareno.crt"
+    auth: "{{ authentication }}"
+    name: "{{ item.name }}"
+    image: "{{ item.image_id }}"
+    flavor: "{{ item.flavor }}"
+    key_name: "{{ item.sshkey_name }}"
+    nics: "{{ item.nics }}"
+    #auto_ip: yes
+    #reuse_ips: yes
+    meta:
+      hostname: "{{ item.name }}"
+      group: "{{ item.group | default(omit) }}"
+  with_items: "{{ servers_list }}"
+  register: os_hosts
+  
+- name: Set facts of servers created
+  set_fact:
+    servers_fact: "{{ os_hosts }}"

@@ -1,0 +1,7 @@
+# roles/infra/tasks/create_inventory-infra.yml
+---
+
+- name: Create inventory infra with template
+  template:
+    src: inventory-infra.j2
+    dest: "{{ role_path }}/../../inventories/infra.yml"

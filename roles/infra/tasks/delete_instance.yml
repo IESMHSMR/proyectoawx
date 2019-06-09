@@ -1,0 +1,11 @@
+# roles/infra/tasks/delete_instance.yml
+---
+
+- name: Delete instances
+  os_server:
+    state: absent
+    #validate_certs: no
+    ca_cert: "{{ role_path }}/files/gonzalonazareno.crt"
+    auth: "{{ authentication }}"
+    name: "{{ item.name }}"
+  with_items: "{{ servers_list }}"

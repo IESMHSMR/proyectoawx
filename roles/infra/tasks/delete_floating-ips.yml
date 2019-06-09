@@ -1,0 +1,12 @@
+# roles/infra/tasks/delete_floating-ips.yml
+---
+
+- name: Delete floating ips
+  os_floating_ip:
+    state: absent
+    purge: yes
+    #validate_certs: no
+    ca_cert: "{{ role_path }}/files/gonzalonazareno.crt"
+    auth: "{{ authentication }}"
+    server: "{{ item.name }}"
+  with_items: "{{ servers_list }}"

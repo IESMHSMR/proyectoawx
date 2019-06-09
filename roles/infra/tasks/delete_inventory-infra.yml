@@ -1,0 +1,7 @@
+# roles/infra/tasks/delete_inventory-infra.yml
+---
+
+- name: Delete inventory infra
+  file:
+    state: absent
+    path: "{{ role_path }}/../../inventories/infra.yml"
