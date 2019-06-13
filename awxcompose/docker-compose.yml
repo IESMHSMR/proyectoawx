@@ -1,0 +1,82 @@
+version: '2'
+services:
+
+  web:
+    image: ansible/awx_web:4.0.0
+    container_name: awx_web
+    depends_on:
+      - rabbitmq
+      - memcached
+      - postgres
+    ports:
+      - "80:8052"
+    hostname: awxweb
+    user: root
+    restart: unless-stopped
+    volumes:
+      - "/tmp/awxcompose/SECRET_KEY:/etc/tower/SECRET_KEY"
+      - "/tmp/awxcompose/environment.sh:/etc/tower/conf.d/environment.sh"
+      - "/tmp/awxcompose/credentials.py:/etc/tower/conf.d/credentials.py"
+      - "/var/lib/awx/projects:/var/lib/awx/projects:rw"
+    environment:
+      http_proxy: 
+      https_proxy: 
+      no_proxy: 
+
+  task:
+    image: ansible/awx_task:4.0.0
+    container_name: awx_task
+    depends_on:
+      - rabbitmq
+      - memcached
+      - web
+      - postgres
+    hostname: awxtask
+    user: root
+    restart: unless-stopped
+    volumes:
+      - "/tmp/awxcompose/SECRET_KEY:/etc/tower/SECRET_KEY"
+      - "/tmp/awxcompose/environment.sh:/etc/tower/conf.d/environment.sh"
+      - "/tmp/awxcompose/credentials.py:/etc/tower/conf.d/credentials.py"
+      - "/var/lib/awx/projects:/var/lib/awx/projects:rw"
+    environment:
+      http_proxy: 
+      https_proxy: 
+      no_proxy: 
+
+  rabbitmq:
+    image: ansible/awx_rabbitmq:3.7.4
+    container_name: awx_rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_VHOST: "awx"
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "rabbitmqpass"
+      RABBITMQ_ERLANG_COOKIE: rabbitmqcookie
+      http_proxy: 
+      https_proxy: 
+      no_proxy: 
+
+  memcached:
+    image: memcached:alpine
+    container_name: awx_memcached
+    restart: unless-stopped
+    environment:
+      http_proxy: 
+      https_proxy: 
+      no_proxy: 
+
+  postgres:
+    image: postgres:9.6
+    container_name: awx_postgres
+    restart: unless-stopped
+    volumes:
+      - /var/lib/awx/pgdocker:/var/lib/postgresql/data:Z
+    environment:
+      POSTGRES_USER: pguser
+      POSTGRES_PASSWORD: pgpass
+      POSTGRES_DB: pgname
+      PGDATA: /var/lib/postgresql/data/pgdata
+      http_proxy: 
+      https_proxy: 
+      no_proxy: 
