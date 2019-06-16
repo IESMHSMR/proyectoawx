@@ -1,4 +1,4 @@
-JuanPe - ansible role: ROLES/INFRA
+JuanPe - ansible role: INFRA
 =========
 
 A brief description of the role goes here.
