@@ -1,0 +1,45 @@
+# playbooks/hosting.yml
+---
+## Create rule for new http port in groups security of Openstack
+- hosts: localhost
+  gather_facts: False
+  tasks:
+    - name: Include vars of ports used
+      include_vars:
+        file: ../host_vars/http_ports.yml
+        name: http_ports
+
+    - name: Include vars of authenticaction
+      include_vars:
+        file: ../host_vars/local/auth.yml
+        name: authentication
+
+    - name: Set facts check if user port already exists
+      set_fact:
+        port_user_exists: True
+      when: awx_user in http_ports.used.keys()
+
+    - name: Set facts if user port not exists yet
+      set_fact:
+        http_port_available: "{{ http_ports.used.values() | list | max +1 }}"
+      when: not port_user_exists | default(False)
+
+    - name: Set facts user commons
+      set_fact:
+        user_hosting: "{{ awx_user }}"
+        cms_hosting: "{{ awx_cms }}"
+        port_hosting: "{{ http_port_available | default(http_ports.used[(awx_user)]) }}"
+
+    - name: Include role create_rule_port_openstack if user port not exists yet
+      include_role:
+        name: hosting
+        tasks_from: create_rule_port_openstack
+      when: not port_user_exists | default(False)
+
+# Create hosting
+- hosts: all
+  gather_facts: True
+  become: True
+  roles:
+    - hosting
+    
