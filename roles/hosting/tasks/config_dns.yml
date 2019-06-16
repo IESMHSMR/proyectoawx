@@ -1,11 +1,11 @@
 # roles/hosting/tasks/config_dns.yml
 ---
-- name: Add dns record type CNAME for "{{ awx_user }}"
+- name: Add dns record type CNAME for "{{ user_hosting }}"
   blockinfile:
     path: "{{ item }}"
-    marker: "; {mark} RECORD CNAME {{ awx_user }}"
+    marker: "; {mark} RECORD CNAME {{ user_hosting }}"
     block: |
-      {{ awx_user }}  IN CNAME apache
+      {{ user_hosting }}  IN CNAME apache
   with_items:
     - "/var/cache/bind/zone.juanpe.internal"
     - "/var/cache/bind/zone.juanpe.external"

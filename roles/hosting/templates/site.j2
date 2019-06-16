@@ -1,11 +1,11 @@
 <VirtualHost *:80>
-        ServerName {{ awx_user }}.juanpe.gonzalonazareno.org
+        ServerName {{ user_hosting }}.juanpe.gonzalonazareno.org
         ServerAdmin webmaster@localhost
 
         ProxyPreserveHost On
         ProxyPass / http://docker.juanpe.gonzalonazareno.org:{{ hosting_http_port }}/
         ProxyPassReverse / http://docker.juanpe.gonzalonazareno.org:{{ hosting_http_port }}/
 
-        ErrorLog /var/log/apache2/{{ awx_user }}_error_log
-        CustomLog /var/log/apache2/{{ awx_user }}_access_log combined
+        ErrorLog /var/log/apache2/{{ user_hosting }}_error_log
+        CustomLog /var/log/apache2/{{ user_hosting }}_access_log combined
 </VirtualHost>

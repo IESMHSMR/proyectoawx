@@ -1,14 +1,14 @@
 # roles/hosting/tasks/config_docker.yml
 ---
-- name: Create container for "{{ awx_user }}"
+- name: Create container for "{{ user_hosting }}"
   docker_container:
-    name: "{{ awx_user }}"
-    image: "{{ awx_cms }}"
+    name: "{{ user_hosting }}"
+    image: "{{ cms_hosting }}"
     restart_policy: always
     state: started
     network_mode: "bridge"
     ports:
-      "{{ hosting_http_port }}:80"
+      "{{ port_hosting }}:80"
     comparisons:
       '*': strict
   become: false

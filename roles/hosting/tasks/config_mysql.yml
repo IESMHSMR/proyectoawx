@@ -1,19 +1,19 @@
 # roles/hosting/tasks/install_mysql.yml
 ---
-#- name: Create Database for "{{ awx_user }}"
+#- name: Create Database for "{{ user_hosting }}"
 #  mysql_db:
-#    name: "{{ awx_user }}"
+#    name: "{{ user_hosting }}"
 #    state: present
 #
-#- name: Create database user "{{ awx_user }}"
+#- name: Create database user "{{ user_hosting }}"
 #  mysql_user:
-#    name: "'{{ awx_user }}'@'10.0.0.%'"
-#    password: "{{ awx_user }}"
-#    priv: '{{ awx_user }}.*:ALL'
+#    name: "'{{ user_hosting }}'@'10.0.0.%'"
+#    password: "{{ user_hosting }}"
+#    priv: '{{ user_hosting }}.*:ALL'
 #    state: present
-- name: Create Database for "{{ awx_user }}"
+- name: Create Database for "{{ user_hosting }}"
   command: mysql -u root -e "{{ item }}"
   with_items:
-    - "CREATE DATABASE {{ awx_user }};"
-    - "CREATE USER '{{ awx_user }}'@'10.0.0.%' IDENTIFIED BY '{{ awx_user }}';"
-    - "GRANT ALL PRIVILEGES ON {{ awx_user }}.* TO '{{ awx_user }}'@'10.0.0.%';"
+    - "CREATE DATABASE IF NOT EXISTS {{ user_hosting }};"
+    - "CREATE USER IF NOT EXISTS '{{ user_hosting }}'@'10.0.0.%' IDENTIFIED BY '{{ user_hosting }}';"
+    - "GRANT ALL PRIVILEGES ON {{ user_hosting }}.* TO '{{ user_hosting }}'@'10.0.0.%';"

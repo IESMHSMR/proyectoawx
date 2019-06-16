@@ -15,6 +15,6 @@
     #ethertype: IPv4
     #state: present
     protocol: tcp
-    port_range_min: "{{ hosting_http_port }}"
-    port_range_max: "{{ hosting_http_port }}"
+    port_range_min: "{{ http_port_available }}"
+    port_range_max: "{{ http_port_available }}"
     remote_ip_prefix: 0.0.0.0/0
