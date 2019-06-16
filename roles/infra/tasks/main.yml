@@ -1,10 +1,15 @@
 # roles/infra/tasks/main.yml
 ---
+## Set DNS server as -PAPION-
+- name: Include - Update DNS nameserver
+  include_tasks: update_dnsserver_openstack.yml
+
+## Create instances and inventory
 - name: Include - Create infra
   include_tasks: create_infra.yml
   when: accion == "create"
 
+## Delete instances, floating ips and inventory
 - name: Include - Delete infra
   include_tasks: delete_infra.yml
   when: accion == "delete"
-
