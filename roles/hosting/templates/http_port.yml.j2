@@ -2,7 +2,7 @@
 ---
 
 used:
-{% for port in hosting_http_ports %}
-  - {{ port }}
+{% for user,port in http_ports.used.iteritems() %}
+  {{user}}: {{ port }}
 {% endfor %}
-  - {{ hosting_http_port }}
+  {{user_hosting }}: {{ http_port_available }}
