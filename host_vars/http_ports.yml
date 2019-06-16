@@ -1,0 +1,5 @@
+# host_vars/http_ports.yml
+---
+
+used:
+  default: 8000
