@@ -1,0 +1,31 @@
+# playbooks/config_servers.yml
+---
+- hosts: all
+  gather_facts: True
+  any_errors_fatal: True
+  become: True
+  roles:
+    - config
+  vars:
+    docker_users: ["{{ ansible_user }}"]
+    docker_install_compose: False
+
+## Set DNS name servers of Openstack and of instances as my own DNS server
+
+- hosts: localhost
+  gather_facts: False
+  tasks:
+    - name: Include - Update DNS nameserver Openstack
+      include_role:
+        name: config
+        tasks_from: update_dnsserver_openstack
+
+- hosts: all
+  gather_facts: True
+  any_errors_fatal: True
+  become: True
+  tasks:
+    - name: Include - Update DNS nameserver on instances
+      include_role:
+        name: config
+        tasks_from: update_dnsserver_instances
