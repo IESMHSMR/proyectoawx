@@ -4,6 +4,6 @@ all:
   vars:
     # ANSIBLE COMMONS VARS
     ansible_connection: local
-    ansible_python_interpreter: "/var/lib/awx/envs/proyecto"
+    ansible_python_interpreter: "/var/lib/awx/envs/proyecto/bin/python3"
   hosts:
     local
