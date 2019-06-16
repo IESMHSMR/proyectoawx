@@ -14,14 +14,10 @@ services:
     user: root
     restart: unless-stopped
     volumes:
-      - "/tmp/awxcompose/SECRET_KEY:/etc/tower/SECRET_KEY"
-      - "/tmp/awxcompose/environment.sh:/etc/tower/conf.d/environment.sh"
-      - "/tmp/awxcompose/credentials.py:/etc/tower/conf.d/credentials.py"
+      - "./SECRET_KEY:/etc/tower/SECRET_KEY"
+      - "./environment.sh:/etc/tower/conf.d/environment.sh"
+      - "./credentials.py:/etc/tower/conf.d/credentials.py"
       - "/var/lib/awx/projects:/var/lib/awx/projects:rw"
-    environment:
-      http_proxy: 
-      https_proxy: 
-      no_proxy: 
 
   task:
     image: ansible/awx_task:4.0.0
@@ -31,18 +27,14 @@ services:
       - memcached
       - web
       - postgres
-    hostname: awxtask
+    hostname: awx
     user: root
     restart: unless-stopped
     volumes:
-      - "/tmp/awxcompose/SECRET_KEY:/etc/tower/SECRET_KEY"
-      - "/tmp/awxcompose/environment.sh:/etc/tower/conf.d/environment.sh"
-      - "/tmp/awxcompose/credentials.py:/etc/tower/conf.d/credentials.py"
+      - "./SECRET_KEY:/etc/tower/SECRET_KEY"
+      - "./environment.sh:/etc/tower/conf.d/environment.sh"
+      - "./credentials.py:/etc/tower/conf.d/credentials.py"
       - "/var/lib/awx/projects:/var/lib/awx/projects:rw"
-    environment:
-      http_proxy: 
-      https_proxy: 
-      no_proxy: 
 
   rabbitmq:
     image: ansible/awx_rabbitmq:3.7.4
@@ -53,18 +45,11 @@ services:
       RABBITMQ_DEFAULT_USER: "guest"
       RABBITMQ_DEFAULT_PASS: "rabbitmqpass"
       RABBITMQ_ERLANG_COOKIE: rabbitmqcookie
-      http_proxy: 
-      https_proxy: 
-      no_proxy: 
 
   memcached:
     image: memcached:alpine
     container_name: awx_memcached
     restart: unless-stopped
-    environment:
-      http_proxy: 
-      https_proxy: 
-      no_proxy: 
 
   postgres:
     image: postgres:9.6
@@ -77,6 +62,4 @@ services:
       POSTGRES_PASSWORD: pgpass
       POSTGRES_DB: pgname
       PGDATA: /var/lib/postgresql/data/pgdata
-      http_proxy: 
-      https_proxy: 
-      no_proxy: 
+
