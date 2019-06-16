@@ -1,0 +1,38 @@
+# roles/config/tasks/install_dns.yml
+---
+- name: Install Bind9
+  apt:
+    name: bind9
+    state: present
+    update_cache: yes
+    force_apt_get: yes
+
+- name: Main BIND config files
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "root"
+    group: "bind"
+    mode: '0644'
+  with_items:
+    - {src: 'etc_bind_named.conf',dest: '/etc/bind/named.conf'}
+    - {src: 'etc_bind_named.conf.local',dest: '/etc/bind/named.conf.local'}
+    - {src: 'etc_bind_named.conf.options',dest: '/etc/bind/named.conf.options'}
+
+- name: BIND zone files
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "bind"
+    group: "bind"
+    mode: '0644'
+  with_items:
+    - {src: 'var_cache_bind_zone.juanpe.internal.j2',dest: '/var/cache/bind/zone.juanpe.internal'}
+    - {src: 'var_cache_bind_reverse-zone.juanpe.internal.j2',dest: '/var/cache/bind/reverse-zone.juanpe.internal'}
+    - {src: 'var_cache_bind_zone.juanpe.external.j2',dest: '/var/cache/bind/zone.juanpe.external'}
+    - {src: 'var_cache_bind_reverse-zone.juanpe.external.j2',dest: '/var/cache/bind/reverse-zone.juanpe.external'}
+
+- name: Restart service Bind9
+  systemd:
+    name: bind9
+    state: restarted

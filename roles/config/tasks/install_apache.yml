@@ -1,0 +1,18 @@
+# roles/config/tasks/install_apache.yml
+---
+- name: Install Apache2
+  apt:
+    name: apache2
+    state: present
+    update_cache: yes
+    force_apt_get: yes
+
+- name: Enable module proxy_http to Apache2
+  apache2_module:
+    state: present
+    name: proxy_http
+
+- name: Restart service Apache2
+  systemd:
+    name: apache2
+    state: restarted

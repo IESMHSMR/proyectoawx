@@ -1,0 +1,29 @@
+# roles/config/tasks/update_dnsserver_openstack.yml
+---
+- name: Update Openstack subnet DNS nameservers
+  command: "{{ item }}"
+  with_items:
+    - openstack --os-cacert {{ cacert }} subnet set --no-dns-nameserver '{{ subnet_name }}'
+    - openstack --os-cacert {{ cacert }} subnet set --dns-nameserver {{ nameserver }} '{{ subnet_name }}'
+  environment:
+    OS_AUTH_URL: "https://jupiter.gonzalonazareno.org:5000/v3"
+    OS_REGION_NAME: "RegionOne"
+    OS_PROJECT_NAME: "Proyecto de juan.carmona"
+    OS_USER_DOMAIN_NAME: "iesgn"
+    OS_IDENTITY_API_VERSION: 3
+    OS_INTERFACE: "public"
+    OS_USERNAME: "juan.carmona"
+    OS_PROJECT_ID: "b46acc26fe324b738be1b740e29ee48d"
+    OS_PASSWORD: !vault |
+      $ANSIBLE_VAULT;1.1;AES256
+      31636533356432656237393761643064376330316336303633363931343935366135383261306139
+      3232343665353138333164366364626334636337383261620a366139643365393538636165303135
+      35613765306130396431616530373334303536633762326131363531633232666230373662626437
+      3933383232386639360a643563623831623664396262636637336561363634396437653232663835
+      3734
+  vars:
+    cacert: "{{ role_path }}/../infra/files/gonzalonazareno.crt"
+    nameserver: "{{ hostvars['dns']['private_ip'] }}"
+    # Name of subnet is empty in my case
+    subnet_name:
+  run_once: true

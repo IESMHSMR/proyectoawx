@@ -1,0 +1,8 @@
+# roles/config/tasks/set_fqdn.yml
+---
+
+- name: Set hostname and FQDN
+  blockinfile:
+    path: /etc/hosts
+    block: |
+      127.0.1.1 {{ ansible_hostname }}.juanpe.gonzalonazareno.org  {{ ansible_hostname }}

@@ -1,0 +1,22 @@
+# roles/config/tasks/main.yml
+---
+## Update /etc/hosts
+- name: Include - Set FQDN and hostname
+  include_tasks: set_fqdn.yml
+
+## Install Services
+- name: Include - Install DNS
+  include_tasks: install_dns.yml
+  when: ansible_hostname == "dns"
+
+- name: Include - Install Apache
+  include_tasks: install_apache.yml
+  when: ansible_hostname == "apache"
+
+- name: Include - Install MySQL
+  include_tasks: install_mysql.yml
+  when: ansible_hostname == "mysql"
+
+- name: Include - Install Docker
+  include_tasks: install_docker.yml
+  when: ansible_hostname == "docker"

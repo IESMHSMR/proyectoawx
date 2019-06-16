@@ -1,0 +1,7 @@
+# roles/config/tasks/update_dnsserver_instances.yml
+---
+- name: Update global DNS nameserver and of interfaces
+  command: "{{ item }}"
+  with_items:
+    - dhclient
+    - netplan apply

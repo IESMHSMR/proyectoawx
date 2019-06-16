@@ -1,0 +1,14 @@
+$TTL 600      ; 10 min
+@       IN  SOA dns.juanpe.gonzalonazareno.org. admin@example.org. (
+    {{ ansible_date_time.epoch }}   ; serial
+    3600  ; refresh (1 hour)
+    600   ; retry (10 min)
+    86400 ; expire (1 day)
+    600   ; minimum (1 hour)
+    )
+$ORIGIN juanpe.gonzalonazareno.org.
+@       IN  NS  dns
+dns     IN  A   {{ hostvars['dns']['private_ip'] }}
+apache  IN  A   {{ hostvars['apache']['private_ip'] }}
+mysql   IN  A   {{ hostvars['mysql']['private_ip'] }}
+docker  IN  A   {{ hostvars['docker']['private_ip'] }}
