@@ -3,8 +3,8 @@
         ServerAdmin webmaster@localhost
 
         ProxyPreserveHost On
-        ProxyPass / http://docker.juanpe.gonzalonazareno.org:{{ hosting_http_port }}/
-        ProxyPassReverse / http://docker.juanpe.gonzalonazareno.org:{{ hosting_http_port }}/
+        ProxyPass / http://docker.juanpe.gonzalonazareno.org:{{ port_hosting }}/
+        ProxyPassReverse / http://docker.juanpe.gonzalonazareno.org:{{ port_hosting }}/
 
         ErrorLog /var/log/apache2/{{ user_hosting }}_error_log
         CustomLog /var/log/apache2/{{ user_hosting }}_access_log combined
