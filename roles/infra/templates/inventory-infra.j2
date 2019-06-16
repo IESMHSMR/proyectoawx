@@ -1,23 +1,17 @@
 {# roles/infra/templates/inventory-infra.j2 #}
 # inventories/infra.yml
 ---
-
 all:
   vars:
     # ANSIBLE COMMONS VARS
-    ansible_python_interpreter: "{{ ansible_playbook_python }}"
+    ansible_python_interpreter: "/usr/bin/python3"
     ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
     ansible_ssh_transfer_method: scp
     ansible_user: ubuntu
     ansible_ssh_private_key_file: ~/.ssh/id_rsa
   hosts:
-	{% for server in servers_fact.results %}
-	{{ server.item.name }}:
-	    ansible_host: {{ server.openstack.public_v4 }}
-	    vars:
-	  	  private_ip: {{ server.openstack.private_v4 }}
-	{% endfor %}
-
-
-
-
+  {% for server in servers_fact.results %}
+  {{ server.item.name }}:
+      ansible_host: {{ server.openstack.public_v4 }}
+      private_ip: {{ server.openstack.private_v4 }}
+  {% endfor %}
