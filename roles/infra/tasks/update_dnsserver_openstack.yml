@@ -1,7 +1,7 @@
 # roles/config/tasks/update_dnsserver_openstack.yml
 ---
 - name: Update Openstack subnet DNS nameservers
-  command: "/var/lib/awx/envs/proyecto/bin/{{ item }}"
+  command: "{{ item }}"
   with_items:
     - openstack --os-cacert {{ cacert }} subnet set --no-dns-nameserver '{{ subnet_name }}'
     - openstack --os-cacert {{ cacert }} subnet set --dns-nameserver {{ nameserver }} '{{ subnet_name }}'
