@@ -24,22 +24,30 @@
         http_port_available: "{{ http_ports.used.values() | list | max +1 }}"
       when: not port_user_exists | default(False)
 
-    - name: Set facts user commons
-      set_fact:
-        user_hosting: "{{ awx_user }}"
-        cms_hosting: "{{ awx_cms }}"
-        port_hosting: "{{ http_port_available | default(http_ports.used[(awx_user)]) }}"
-
     - name: Include role create_rule_port_openstack if user port not exists yet
       include_role:
         name: hosting
         tasks_from: create_rule_port_openstack
       when: not port_user_exists | default(False)
+  vars:
+    user_hosting: "{{ awx_user }}"
 
 # Create hosting
 - hosts: all
   gather_facts: True
   become: True
-  roles:
-    - hosting
-    
+  tasks:
+    - name: Include vars of ports used
+      include_vars:
+        file: ../host_vars/http_ports.yml
+        name: http_ports
+      run_once: True
+    - name: Include role hosting
+      include_role:
+        name: hosting
+  vars:
+    user_hosting: "{{ awx_user }}"
+    cms_hosting: "{{ awx_cms }}"
+    port_hosting: "{{ http_ports.used[(awx_user)] }}"
+
+
