@@ -1,3 +1,4 @@
+# host_vars/local/main.yml
 ---
 servers_list: "{{ servers }}"
 authentication: "{{ auth }}"
