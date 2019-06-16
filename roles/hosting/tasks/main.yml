@@ -1,0 +1,18 @@
+# roles/hosting/tasks/main.yml
+---
+## Config Services
+- name: Include - Config DNS
+  include_tasks: config_dns.yml
+  when: ansible_hostname == "dns"
+
+- name: Include - Config Apache
+  include_tasks: config_apache.yml
+  when: ansible_hostname == "apache"
+
+- name: Include - Config MySQL
+  include_tasks: config_mysql.yml
+  when: ansible_hostname == "mysql"
+
+- name: Include - Config Docker
+  include_tasks: config_docker.yml
+  when: ansible_hostname == "docker"

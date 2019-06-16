@@ -1,0 +1,8 @@
+# host_vars/http_ports.yml
+---
+
+used:
+{% for port in hosting_http_ports %}
+  - {{ port }}
+{% endfor %}
+  - {{ hosting_http_port }}

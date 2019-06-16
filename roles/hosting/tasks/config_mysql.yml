@@ -1,0 +1,19 @@
+# roles/hosting/tasks/install_mysql.yml
+---
+#- name: Create Database for "{{ awx_user }}"
+#  mysql_db:
+#    name: "{{ awx_user }}"
+#    state: present
+#
+#- name: Create database user "{{ awx_user }}"
+#  mysql_user:
+#    name: "'{{ awx_user }}'@'10.0.0.%'"
+#    password: "{{ awx_user }}"
+#    priv: '{{ awx_user }}.*:ALL'
+#    state: present
+- name: Create Database for "{{ awx_user }}"
+  command: mysql -u root -e "{{ item }}"
+  with_items:
+    - "CREATE DATABASE {{ awx_user }};"
+    - "CREATE USER '{{ awx_user }}'@'10.0.0.%' IDENTIFIED BY '{{ awx_user }}';"
+    - "GRANT ALL PRIVILEGES ON {{ awx_user }}.* TO '{{ awx_user }}'@'10.0.0.%';"

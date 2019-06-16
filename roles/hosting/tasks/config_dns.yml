@@ -1,0 +1,25 @@
+# roles/hosting/tasks/config_dns.yml
+---
+- name: Add dns record type CNAME for "{{ awx_user }}"
+  blockinfile:
+    path: "{{ item }}"
+    marker: "; {mark} RECORD CNAME {{ awx_user }}"
+    block: |
+      {{ awx_user }}  IN CNAME apache
+  with_items:
+    - "/var/cache/bind/zone.juanpe.internal"
+    - "/var/cache/bind/zone.juanpe.external"
+
+- name: Update serial
+  replace:
+    path: "{{ item }}"
+    regexp: '.*; serial$'
+    replace: "{{ ansible_date_time.epoch }}   ; serial"
+  with_items:
+    - "/var/cache/bind/zone.juanpe.internal"
+    - "/var/cache/bind/zone.juanpe.external"
+
+- name: Reload service Bind9
+  systemd:
+    name: bind9
+    state: reloaded

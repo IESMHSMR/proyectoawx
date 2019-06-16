@@ -1,0 +1,20 @@
+# roles/hosting/tasks/create_rule_port_openstack.yml
+---
+
+- name: Update http_port vars file
+  template:
+    src: "http_port.yml.j2"
+    dest: "{{ role_path }}/../../host_vars/http_ports.yml"
+
+- name: Create rule port in security group on Openstack
+  os_security_group_rule:
+    ca_cert: "{{ role_path }}/../infra/files/gonzalonazareno.crt"
+    auth: "{{ authentication.auth }}"
+    security_group: default
+    #direction: ingress
+    #ethertype: IPv4
+    #state: present
+    protocol: tcp
+    port_range_min: "{{ hosting_http_port }}"
+    port_range_max: "{{ hosting_http_port }}"
+    remote_ip_prefix: 0.0.0.0/0

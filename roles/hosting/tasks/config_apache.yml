@@ -1,0 +1,17 @@
+# roles/hosting/tasks/config_apache.yml
+---
+- name: Add site in Apache2 for "{{ awx_user }}"
+  template:
+    src: "site.j2"
+    dest: "/etc/apache2/sites-available/{{ awx_user }}.conf"
+    owner: "root"
+    group: "root"
+    mode: '0644'
+
+- name: Enable site for "{{ awx_user }}"
+  shell: "a2ensite {{ awx_user }}.conf"
+
+- name: Reload service Apache2
+  systemd:
+    name: apache2
+    state: reloaded
