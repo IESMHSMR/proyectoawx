@@ -1,27 +1,33 @@
 # host_vars/local/servers.yml
 ---
+# COMMONS
+id_image: "cb09f386-8235-4874-b7f4-4295edf5d73c"
+id_network: "91af098d-c7c7-4882-a86b-1272fcdaf823"
+flavor_normal: "m1.normal"
+sshkey: "JPDEB1"
+# SERVERS
 servers:
   - name: "dns"
-    image_id: "68a5c478-4a1b-44b6-8f3f-3fd9de7636b4"
-    flavor: "m1.normal"
-    sshkey_name: "JPDEB1"
+    image_id: "{{ id_image }}"
+    flavor: "{{ flavor_normal }}"
+    sshkey_name: "{{ sshkey }}"
     nics:
-      - network_id: "91af098d-c7c7-4882-a86b-1272fcdaf823"
-#  - name: "apache"
-#    image_id: "68a5c478-4a1b-44b6-8f3f-3fd9de7636b4"
-#    flavor: "m1.normal"
-#    sshkey_name: "JPDEB1"
-#    nics:
-#      - network_id: "91af098d-c7c7-4882-a86b-1272fcdaf823"
-#  - name: "mysql"
-#    image_id: "68a5c478-4a1b-44b6-8f3f-3fd9de7636b4"
-#    flavor: "m1.normal"
-#    sshkey_name: "JPDEB1"
-#    nics:
-#      - network_id: "91af098d-c7c7-4882-a86b-1272fcdaf823"
-#  - name: "docker"
-#    image_id: "68a5c478-4a1b-44b6-8f3f-3fd9de7636b4"
-#    flavor: "m1.large"
-#    sshkey_name: "JPDEB1"
-#    nics:
-#      - network_id: "91af098d-c7c7-4882-a86b-1272fcdaf823"
+      - network_id: "{{ id_network }}"
+  - name: "apache"
+    image_id: "{{ id_image }}"
+    flavor: "{{ flavor_normal }}"
+    sshkey_name: "{{ sshkey }}"
+    nics:
+      - network_id: "{{ id_network }}"
+  - name: "mysql"
+    image_id: "{{ id_image }}"
+    flavor: "{{ flavor_normal }}"
+    sshkey_name: "{{ sshkey }}"
+    nics:
+      - network_id: "{{ id_network }}"
+  - name: "docker"
+    image_id: "{{ id_image }}"
+    flavor: "m1.large"
+    sshkey_name: "{{ sshkey }}"
+    nics:
+      - network_id: "{{ id_network }}"
