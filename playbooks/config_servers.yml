@@ -7,7 +7,7 @@
   roles:
     - config
   vars:
-    docker_users: ["{{ ansible_user }}"]
+    docker_users: ["ubuntu"]
     docker_install_compose: False
 
 ## Set DNS name servers of Openstack and of instances as my own DNS server
