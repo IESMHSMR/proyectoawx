@@ -108,6 +108,21 @@ function etk-awx-cli-create-credential-git() {
 }
 
 
+function etk-awx-cli-create-credential-vault() {
+
+  CRED_INPUTS="vault_password: $VAULT_PASSWORD"
+
+  tower-cli credential create \
+    --organization="$PROJECT_ORG" \
+    --description="Credential-vault for project ${PROJECT_ORG}-${PROJECT_NAME}" \
+    --name="credential-vault_${PROJECT_ORG}-${PROJECT_NAME}" \
+    --credential-type="Vault" \
+    --inputs="$CRED_INPUTS" \
+    --force-on-exists
+
+}
+
+
 function etk-awx-cli-create-credential-ssh() {
 
   CRED_INPUTS="ssh_key_data: |"$'\n'"$(awk '{printf " %s\n", $0}' < ${SSH_KEY_FILE})"
@@ -171,8 +186,8 @@ function etk-awx-cli-create-inventory() {
 
   tower-cli inventory create \
     --organization="$PROJECT_ORG" \
-    --description="Inventory for ${PROJECT_ORG}-${PROJECT_NAME}" \
-    --name="inventory_${PROJECT_ORG}-${PROJECT_NAME}" \
+    --description="Inventory ${INVENTORY_NAME} for ${PROJECT_ORG}-${PROJECT_NAME}" \
+    --name="inventory_${INVENTORY_NAME}-${PROJECT_ORG}-${PROJECT_NAME}" \
     --force-on-exists
 
 }
@@ -181,9 +196,9 @@ function etk-awx-cli-create-inventory() {
 function etk-awx-cli-create-inventory_source() {
 
   tower-cli inventory_source create \
-    --description="Source for inventory_${PROJECT_ORG}-${PROJECT_NAME}" \
-    --name="inventory-source_${PROJECT_ORG}-${PROJECT_NAME}" \
-    --inventory="inventory_${PROJECT_ORG}-${PROJECT_NAME}" \
+    --description="Source ${INVENTORY_NAME} for inventory_${PROJECT_ORG}-${PROJECT_NAME}" \
+    --name="inventory-source_${INVENTORY_NAME}-${PROJECT_ORG}-${PROJECT_NAME}" \
+    --inventory="inventory_${INVENTORY_NAME}-${PROJECT_ORG}-${PROJECT_NAME}" \
     --source="scm" \
     --source-project="project-git_${PROJECT_ORG}-${PROJECT_NAME}" \
     --source-path="${INVENTORY_FILE}" \
@@ -197,11 +212,12 @@ function etk-awx-cli-create-job_template() {
   tower-cli job_template create \
     --job-type="run" \
     --description="Job template for project ${PROJECT_ORG}-${PROJECT_NAME}" \
-    --name="job-template_${PROJECT_ORG}-${PROJECT_NAME}" \
-    --inventory="inventory_${PROJECT_ORG}-${PROJECT_NAME}" \
+    --name="job-template_${JOB_NAME}-${PROJECT_ORG}-${PROJECT_NAME}" \
+    --inventory="inventory_${INVENTORY_NAME}-${PROJECT_ORG}-${PROJECT_NAME}" \
     --project="project-git_${PROJECT_ORG}-${PROJECT_NAME}" \
     --playbook="${PLAYBOOK_FILE}" \
     --credential="credential-ssh_${PROJECT_ORG}-${PROJECT_NAME}" \
+    --vault-credential="credential-vault_${PROJECT_ORG}-${PROJECT_NAME}" \
     --ask-variables-on-launch=true \
     --force-on-exists
 
@@ -210,14 +226,14 @@ function etk-awx-cli-create-job_template() {
 
 function etk-awx-cli-modify-job_template-survey() {
 
-  echo ${SURVEY_TEXT:-} > /tmp/survey_${PROJECT_ORG}-${PROJECT_NAME}.json
+  echo ${SURVEY_TEXT:-} > /tmp/survey_${JOB_NAME}-${PROJECT_ORG}-${PROJECT_NAME}.json
 
   tower-cli job_template modify \
-    --name="job-template_${PROJECT_ORG}-${PROJECT_NAME}" \
-    --survey-spec=@/tmp/survey_${PROJECT_ORG}-${PROJECT_NAME}.json \
+    --name="job-template_${JOB_NAME}-${PROJECT_ORG}-${PROJECT_NAME}" \
+    --survey-spec=@/tmp/survey_${JOB_NAME}-${PROJECT_ORG}-${PROJECT_NAME}.json \
     --survey-enabled=true
 
-  rm /tmp/survey_${PROJECT_ORG}-${PROJECT_NAME}.json
+  rm /tmp/survey_${JOB_NAME}-${PROJECT_ORG}-${PROJECT_NAME}.json
 
 }
 
@@ -238,7 +254,7 @@ function etk-awx-cli-update-inventoy_source() {
 
   tower-cli inventory_source update \
   --monitor \
-  inventory-source_${PROJECT_ORG}-${PROJECT_NAME}
+  inventory-source_${INVENTORY_NAME}-${PROJECT_ORG}-${PROJECT_NAME}
 
 }
 
@@ -250,7 +266,7 @@ function etk-awx-cli-update-inventoy_source() {
 function etk-awx-cli-check-job_template() {
 
   tower-cli job_template get \
-    --name="job-template_${PROJECT_ORG}-${PROJECT_NAME}" \
+    --name="job-template_${JOB_NAME}-${PROJECT_ORG}-${PROJECT_NAME}" \
     2>/dev/null
 
 }
@@ -259,7 +275,7 @@ function etk-awx-cli-check-job_template() {
 function etk-awx-cli-modify-template_playbook() {
 
   tower-cli job_template modify \
-    --name="job-template_${PROJECT_ORG}-${PROJECT_NAME}" \
+    --name="job-template_${JOB_NAME}-${PROJECT_ORG}-${PROJECT_NAME}" \
     --project="project-git_${PROJECT_ORG}-${PROJECT_NAME}" \
     --playbook="${PLAYBOOK_FILE}"
 
@@ -269,7 +285,7 @@ function etk-awx-cli-modify-template_playbook() {
 function etk-awx-cli-launch-job() {
 
     tower-cli job launch \
-      --job-template=job-template_${PROJECT_ORG}-${PROJECT_NAME} \
+      --job-template=job-template_${JOB_NAME}-${PROJECT_ORG}-${PROJECT_NAME} \
       --extra-vars="${VARS_TO_LAUNCH:-}" \
       --verbosity=2 \
       --monitor
@@ -296,6 +312,12 @@ function etk-awx-cli-delete-credential-ssh() {
 
 }
 
+function etk-awx-cli-delete-credential-vault() {
+
+  tower-cli credential delete \
+    --name="credential-vault_${PROJECT_ORG}-${PROJECT_NAME}"
+
+}
 
 function etk-awx-cli-delete-project() {
 
@@ -308,7 +330,7 @@ function etk-awx-cli-delete-project() {
 function etk-awx-cli-delete-inventory() {
 
   tower-cli inventory delete \
-    --name="inventory_${PROJECT_ORG}-${PROJECT_NAME}"
+    --name="inventory_${INVENTORY_NAME}-${PROJECT_ORG}-${PROJECT_NAME}"
 
 }
 
@@ -316,7 +338,7 @@ function etk-awx-cli-delete-inventory() {
 function etk-awx-cli-delete-job_template() {
 
   tower-cli job_template delete \
-    --name="job-template_${PROJECT_ORG}-${PROJECT_NAME}"
+    --name="job-template_${JOB_NAME}-${PROJECT_ORG}-${PROJECT_NAME}"
 
 }
 
@@ -330,6 +352,7 @@ function etk-awx-cli-create-main() {
 
   etk-awx-cli-create-credential-git
   etk-awx-cli-create-credential-ssh
+  etk-awx-cli-create-credential-vault
   etk-awx-cli-create-project
   etk-awx-cli-wait-for-project
   etk-awx-cli-create-inventory
@@ -392,6 +415,7 @@ function etk-awx-cli-delete-main() {
   etk-awx-cli-delete-project
   etk-awx-cli-delete-credential-ssh
   etk-awx-cli-delete-credential-git
+  etk-awx-cli-delete-credential-vault
 
 }
 
@@ -405,7 +429,7 @@ function etk-awx-cli-delete-main() {
 ###{{{ MAIN
 
 ## Comprobación de entornos virtuales de python3
-source ~/entornos/entorno_${PROJECT_ORG}-${PROJECT_NAME}/bin/activate
+#source ~/entornos/entorno_${PROJECT_ORG}-${PROJECT_NAME}/bin/activate
 
 ## Config tower-cli
 etk-awx-cli-config
@@ -432,6 +456,6 @@ then
 
 fi
 
-deactivate
+#deactivate
 
 ### MAIN }}}

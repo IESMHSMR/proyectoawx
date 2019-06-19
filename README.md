@@ -41,7 +41,7 @@ source ${PROJECT_DIR}/entorno/bin/activate
 pip install -r ${PROJECT_DIR}/${PROJECT_REPO_NAME}/requeriments.txt
 ```
 
-* Variables para API AWX
+* Variables para API AWX EJEMPLO (variables en infra-vars.sh, config-vars.sh, hosting-vars.sh )
 ```
 ## For all connections:
 AWXUSER="awxuser"
@@ -63,3 +63,15 @@ PLAYBOOK_FILE="playbooks/create_servers.yml"
 INVENTORY_FILE="inventories/local.yml"
 ```
 
+* Antes de poder ejecutar playbooks crearemos nuevo entorno virtual para AWX sino dará error:
+[Ver aquí cómo](https://jpcarmona.github.io/web/blog/proyecto/#anexo-1)
+
+* Creación de proyectos y lanzamiento de plantillas de trabajo:
+```
+bash awx-cli.bash create infra-vars.sh
+bash awx-cli.bash launch infra-vars.sh
+bash awx-cli.bash create config-vars.sh
+bash awx-cli.bash launch config-vars.sh
+bash awx-cli.bash create hosting-vars.sh
+bash awx-cli.bash launch hosting-vars.sh
+```

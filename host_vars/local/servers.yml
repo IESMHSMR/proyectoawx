@@ -4,7 +4,7 @@
 id_image: "cb09f386-8235-4874-b7f4-4295edf5d73c"
 id_network: "91af098d-c7c7-4882-a86b-1272fcdaf823"
 flavor_normal: "m1.normal"
-sshkey: "JPDEB1"
+sshkey: "id_rsa"
 # SERVERS
 servers:
   - name: "dns"
